@@ -9,7 +9,7 @@ def Youtube_download():
     try:
         yt = YouTube(link)
     except:
-        print(Fore.RED + "Connection Error" + Fore.RESET)
+        print(Fore.RED + "Connection Error! please verify if URL is correct." + Fore.RESET)
         sys.exit()
     else:
         print(Fore.GREEN + "URL is OK" + Fore.RESET)
