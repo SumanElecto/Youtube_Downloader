@@ -1,95 +1,102 @@
-#!/usr/bin/python3
+# YouTube Video Downloader
 
-import datetime
-import subprocess
-import os
-import platform
+This Python script allows you to download YouTube videos in the best available quality using the [yt-dlp](https://github.com/yt-dlp/yt-dlp) library. It also ensures that `ffmpeg` is available for video/audio processing.
 
-def condition_check():
-    if platform.system() != "Linux":
-        print("\nThis script is compatible with Linux only!\n")
-        exit(1)
-    elif os.geteuid() == 0:
-        print("Please run as a non-root user!")
-        exit(1)
+## Features
 
-def get_azcopy():
-    print("This script needs the azcopy package")
-    enquiry = input("Do you have azcopy downloaded and extracted? (y/n): ")
-    if enquiry.lower() == 'y':
-        az_copy_path = input("Enter path for azcopy: ")
-        if not os.path.isdir(az_copy_path):
-            print("\nPath should be an azcopy directory.")
-        else:
-            os.chdir(az_copy_path)
-    elif enquiry.lower() == 'n':
-        print("Downloading azcopy...\n")
-        subprocess.run(['curl', '-o', 'azcopy.tar.gz', 'https://azcopyvnext.azureedge.net/release20230420/azcopy_linux_amd64_10.18.1.tar.gz'])
-        os.system("mkdir azcopy && tar -xzvf azcopy.tar.gz --strip-components=1")
-        os.chdir(os.getcwd() + "/azcopy")
-    else:
-        print("Wrong input, please try again!")
+- Downloads YouTube videos in the best video and audio quality.
+- Saves videos to your Downloads folder.
+- Checks for `ffmpeg` in a specified directory before downloading.
 
-def run_azcopy_command(cmd):
-    run = subprocess.run(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, check=True)
-    if run.returncode != 0:
-        print("\nSomething went wrong!\n")
-        exit(1)
-    return run.stdout.decode('utf-8')
+## Requirements
 
-def blob_data():
-    src_storage_name = input("Enter source storage account name: ")
-    src_blob_url = f"https://{src_storage_name}.blob.core.windows.net"
-    src_data_path = input("Enter source path: ")
-    dest_storage_name = input("Enter destination storage account name: ")
-    dest_blob_url = f"https://{dest_storage_name}.blob.core.windows.net"
-    dest_container_name = input("Enter destination path: ")
-    cmd = f"./azcopy copy {src_blob_url}/{src_data_path}{src_account_sas_key} {dest_blob_url}/{dest_container_name}{dest_account_sas_key} --recursive".split()
-    run_azcopy_command(cmd)
+- Python 3.7 or higher
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+- [ffmpeg](https://ffmpeg.org/) (must be installed and the path set in the script)
 
-def file_data():
-    src_storage_name = input("Enter source storage account name: ")
-    src_file_url = f"https://{src_storage_name}.file.core.windows.net"
-    src_fileshare_name = input("Source fileshare name: ")
-    dest_storage_name = input("Enter destination account name: ")
-    dest_file_url = f"https://{dest_storage_name}.file.core.windows.net"
-    dest_fileshare_name = input("Destination fileshare name: ")
-    cmd = f"./azcopy copy '{src_file_url}/{src_fileshare_name}{src_account_sas_key}' '{dest_file_url}/{dest_fileshare_name}{dest_account_sas_key}' --recursive=true".split()
-    run_azcopy_command(cmd)
+## Installation
 
-def local_file_upload():
-    local_file_path = input("Enter local file or folder path: ")
-    remote_account_name = input("Enter account name: ")
-    remote_fileshare_name = input("Enter fileshare name: ")
-    dest_url = f"https://{remote_account_name}.file.core.windows.net/{remote_fileshare_name}"
-    sas_key = input("Enter SAS key: ")
-    cmd = f"./azcopy copy {local_file_path} {dest_url}{sas_key} --recursive=true".split()
-    output = run_azcopy_command(cmd)
-    print(output)
-    print("\nData successfully uploaded!\n")
+1. **Install yt-dlp:**
+    ```sh
+    pip install yt-dlp
+    ```
 
-def main():
-    options = '''
-    1. Blob data transfer (storage to storage)
-    2. File data transfer (storage to storage)
-    3. Local File Data Transfer (Local to storage)
-    4. Exit
-    '''
-    print(options)
-    action_items = {'1': blob_data, '2': file_data, '3': local_file_upload}
-    action_select = input("Choose action (1-4): ")
+2. **Download and extract [ffmpeg](https://ffmpeg.org/download.html)**  
+   Update the `ffmpeg_path` variable in the script to point to your `ffmpeg` binary directory.
 
-    while action_select not in action_items and action_select not in ['4', 'Exit', 'quit']:
-        print("Wrong input, please try again!\n")
-        action_select = input("Choose action (1-4): ")
+## Usage
 
-    if action_select in action_items:
-        action_items[action_select]()
-    else:
-        print("Good Bye")
-        exit(1)
+1. Edit the script if needed to set the correct `ffmpeg_path` and `save_path`.
+2. Run the script:
+    ```sh
+    python Youtube_downloader.py
+    ```
+3. Enter the YouTube video URL when prompted.
 
-if __name__ == "__main__":
-    condition_check()
-    get_azcopy()
-    main()
+## Script Details
+
+- The script checks if `ffmpeg` is available in the specified directory.
+- Downloads the video to `C:\Users\Admin\Downloads` (change `save_path` in the script if needed).
+- The output file will be named after the video title.
+
+## Troubleshooting
+
+- If you see an error about `ffmpeg` not being found, make sure the `ffmpeg_path` variable is set to the directory containing the `ffmpeg` executable.
+- Ensure you have the necessary permissions to write to the download directory.
+
+## License
+
+This script is provided as-is for personal use.
+
+---
+```# YouTube Video Downloader
+
+This Python script allows you to download YouTube videos in the best available quality using the [yt-dlp](https://github.com/yt-dlp/yt-dlp) library. It also ensures that `ffmpeg` is available for video/audio processing.
+
+## Features
+
+- Downloads YouTube videos in the best video and audio quality.
+- Saves videos to your Downloads folder.
+- Checks for `ffmpeg` in a specified directory before downloading.
+
+## Requirements
+
+- Python 3.7 or higher
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+- [ffmpeg](https://ffmpeg.org/) (must be installed and the path set in the script)
+
+## Installation
+
+1. **Install yt-dlp:**
+    ```sh
+    pip install yt-dlp
+    ```
+
+2. **Download and extract [ffmpeg](https://ffmpeg.org/download.html)**  
+   Update the `ffmpeg_path` variable in the script to point to your `ffmpeg` binary directory.
+
+## Usage
+
+1. Edit the script if needed to set the correct `ffmpeg_path` and `save_path`.
+2. Run the script:
+    ```sh
+    python Youtube_downloader.py
+    ```
+3. Enter the YouTube video URL when prompted.
+
+## Script Details
+
+- The script checks if `ffmpeg` is available in the specified directory.
+- Downloads the video to `C:\Users\Admin\Downloads` (change `save_path` in the script if needed).
+- The output file will be named after the video title.
+
+## Troubleshooting
+
+- If you see an error about `ffmpeg` not being found, make sure the `ffmpeg_path` variable is set to the directory containing the `ffmpeg` executable.
+- Ensure you have the necessary permissions to write to the download directory.
+
+## License
+
+This script is provided as-is for personal use.
+
+---
