@@ -1,48 +1,50 @@
 # YouTube Video Downloader
 
-This Python script allows you to download YouTube videos in the best available quality using the [yt-dlp](https://github.com/yt-dlp/yt-dlp) library. It also ensures that `ffmpeg` is available for video/audio processing.
+This Python script downloads YouTube videos using [yt-dlp](https://github.com/yt-dlp/yt-dlp) and ffmpeg for media processing.
 
 ## Features
 
-- Downloads YouTube videos in the best video and audio quality.
-- Saves videos to your Downloads folder.
-- Checks for `ffmpeg` in a specified directory before downloading.
+- Downloads YouTube videos in the best available quality
+- Saves videos to a chosen folder
+- Supports ffmpeg auto-detection or an explicit path
+- Works on Windows, macOS, and Linux
 
 ## Requirements
 
-- Python 3.7 or higher
+- Python 3.8+
+- [ffmpeg](https://www.ffmpeg.org/download.html)
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)
-- [ffmpeg](https://ffmpeg.org/) (must be installed and the path set in the script)
 
 ## Installation
 
-1. **Install yt-dlp:**
-    ```sh
-    pip install yt-dlp
-    ```
+1. Install ffmpeg and make sure it is available in your PATH, or note the folder containing the `ffmpeg` executable.
+2. Install the project dependencies:
 
-2. **Download and extract [ffmpeg](https://ffmpeg.org/download.html)**  
-   Update the `ffmpeg_path` variable in the script to point to your `ffmpeg` binary directory.
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ## Usage
 
-1. Edit the script if needed to set the correct `ffmpeg_path` and `save_path`.
-2. Run the script:
-    ```sh
-    python Youtube_downloader.py
-    ```
-3. Enter the YouTube video URL when prompted.
+Run the script with a YouTube URL:
 
-## Script Details
+```bash
+python Youtube_Downloader.py "https://www.youtube.com/watch?v=VIDEO_ID"
+```
 
-- The script checks if `ffmpeg` is available in the specified directory.
-- Downloads the video to `C:\Users\Admin\Downloads` (change `save_path` in the script if needed).
-- The output file will be named after the video title.
+Optional arguments:
+
+```bash
+python Youtube_Downloader.py "https://www.youtube.com/watch?v=VIDEO_ID" --output-dir ~/Downloads --ffmpeg-path /usr/local/bin
+```
+
+If you do not provide a URL, the script will prompt you for one.
 
 ## Troubleshooting
 
-- If you see an error about `ffmpeg` not being found, make sure the `ffmpeg_path` variable is set to the directory containing the `ffmpeg` executable.
-- Ensure you have the necessary permissions to write to the download directory.
+- If ffmpeg is not found, install it and ensure it is on PATH.
+- If the script cannot find ffmpeg, pass `--ffmpeg-path` pointing to the directory or executable.
+- Some YouTube videos may be restricted or require a valid network connection.
 
 ## License
 
